@@ -21,14 +21,14 @@
         </div>
         <div class="container">
 
-          <form>
+          <form method="post" action="@routes.HomeController.deal">
             <div class="form-group">
               <div class="row">
                 <div class="col-lg-4 offset-lg-4"><label for="exampleInputEmail1">Email address</label></div>
               </div>
               <div class="row">
                 <div class="col-lg-4 offset-lg-4">
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                  <input type="text" class="form-control" id="example-email-text" name="example-email-text" aria-describedby="emailHelp" placeholder="Enter email">
                 </div>
               </div>
             </div>
@@ -37,9 +37,18 @@
                 <div class="col-lg-4 offset-lg-4"><label for="exampleInputPassword1">Password</label></div>
               </div>
               <div class="row">
-                <div class="col-lg-4 offset-lg-4"><input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"></div>
+                <div class="col-lg-4 offset-lg-4"><input type="text" class="form-control" id="example-passwd-text" name="example-passwd-text" placeholder="Password"></div>
               </div>
             </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-lg-4 offset-lg-4"><label for="example-date-label">Date</label></div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4 offset-lg-4"><input type="text" class="form-control" id="example-date-text" name="example-date-text" placeholder="date"></div>
+              </div>
+            </div>
+
             <div class="row">
               <div class="offset-lg-4 col-lg-4"><button type="submit" class="btn btn-primary">Submit</button></div>
             </div>
@@ -52,6 +61,6 @@
     <!--<input type="text" id="data-picker-text">-->
 
     <script type="text/javascript">
-            flatpickr("#data-picker-text", {"locale":"zh"})
+      flatpickr("#example-date-text", {})
     </script>
 }
