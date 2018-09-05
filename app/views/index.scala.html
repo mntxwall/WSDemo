@@ -1,4 +1,4 @@
-@()(implicit assetsFinder: AssetsFinder)
+@(userData: UserTable)(implicit assetsFinder: AssetsFinder)
 
   @header("Welcome to Play BootStrap") {
 
@@ -28,7 +28,7 @@
               </div>
               <div class="row">
                 <div class="col-lg-4 offset-lg-4">
-                  <input type="text" class="form-control" id="example-email-text" name="example-email-text" aria-describedby="emailHelp" placeholder="Enter email">
+                  <input type="text" class="form-control" id="example-email-text" name="example-email-text" aria-describedby="emailHelp" value="@userData.email">
                 </div>
               </div>
             </div>
@@ -37,7 +37,7 @@
                 <div class="col-lg-4 offset-lg-4"><label for="exampleInputPassword1">Password</label></div>
               </div>
               <div class="row">
-                <div class="col-lg-4 offset-lg-4"><input type="text" class="form-control" id="example-passwd-text" name="example-passwd-text" placeholder="Password"></div>
+                <div class="col-lg-4 offset-lg-4"><input type="text" class="form-control" id="example-passwd-text" name="example-passwd-text" value="@userData.password"></div>
               </div>
             </div>
             <div class="form-group">
@@ -45,7 +45,7 @@
                 <div class="col-lg-4 offset-lg-4"><label for="example-date-label">Date</label></div>
               </div>
               <div class="row">
-                <div class="col-lg-4 offset-lg-4"><input type="text" class="form-control" id="example-date-text" name="example-date-text" placeholder="date"></div>
+                <div class="col-lg-4 offset-lg-4"><input type="text" class="form-control" id="example-date-text" name="example-date-text" val></div>
               </div>
             </div>
 
