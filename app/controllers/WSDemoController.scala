@@ -77,13 +77,19 @@ class WSDemoController @Inject() (ws:WSClient, cc: ControllerComponents) (implic
 
 
   def getDomainNames(text: String) = Action.async { implicit request =>
+
+    getNounPhrases(text).flatMap { phrases => getAvailableDomains(phrases).map(domains => Ok(Json.obj("available_domains" -> domains.mkString(";")))) };
+  }
+
+    /*
     for {
       phrases <- getNounPhrases(text)
       domains <- getAvailableDomains(phrases)
     } yield {
       Ok(Json.obj("available_domains" -> domains.mkString(";")))
     }
-  }
+  }*/
+
 
 
 

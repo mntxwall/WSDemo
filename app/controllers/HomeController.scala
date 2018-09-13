@@ -19,7 +19,7 @@ import scala.concurrent.duration.DurationInt
 
 
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFinder,
+class HomeController @Inject()(cc: ControllerComponents, config: Configuration)(implicit assetsFinder: AssetsFinder,
                                                          ec: ExecutionContext) extends AbstractController(cc) {
 
   /**
@@ -78,13 +78,16 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit assetsFinder: 
 
       println("r1 is " + r1)
       //Await.result(aa1, 3.seconds)
-      Thread.sleep(2000)
-      addTwoAddTwo(r1, 4).map{r2 =>
 
+      addTwoAddTwo(r1, 4).map{r2 =>
+          Thread.sleep(3000)
           println("r2 is " + r2)
 
       }
     }
+
+
+    Await.result(aa1, 3.seconds)
 
 /*
     for{
@@ -107,6 +110,8 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit assetsFinder: 
     //a1.map(println)
     //a2.foreach(println)
 
+
+    println(config.get[Int]("wei.test"))
 
     b.map(bb =>{
       Ok(Json.obj("name" -> bb))
