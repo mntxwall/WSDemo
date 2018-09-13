@@ -1,11 +1,13 @@
 package controllers
 
+import java.time.LocalTime
+
 import javax.inject._
 import models.UserTable
 import play.api._
 import play.api.data.Forms._
 import play.api.data.Form
-import play.api.libs.json.Json
+import play.api.libs.json.{JsNull, Json}
 import play.api.mvc._
 
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -64,6 +66,42 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration)(
   }
 
 
+  private def doSearch(a: String, b: String):Future[Option[String]] = {
+
+    Future{
+
+      val searchJson = Json.obj("name" -> JsNull, "pet" -> b)
+
+      (searchJson \ "name").asOpt[String]
+    }
+  }
+
+  def helloSearch(a: String, b: String, func:(String, String) => Future[Option[String]]): Future[Option[String]] = {
+
+    func(a, b).map {
+
+      case Some(value) =>
+        Logger.debug("This is Some " + Some(value).get)
+        Some(value)
+      case None =>
+
+        Logger.debug("This is None " + LocalTime.now())
+        Thread.sleep(2000)
+        val tt = helloSearch(a, b, doSearch)
+
+        Await.result(tt, 5.seconds)
+
+    }
+    //tt.result(5.seconds)
+    //Await.result(tt, 5.seconds)
+  }
+
+  def test2() = Action{ implicit  request =>
+
+    helloSearch(null, "Hello", doSearch)
+
+    Ok("test2")
+  }
 
 
   def test() = Action.async{ implicit request =>
