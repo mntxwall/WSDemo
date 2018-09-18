@@ -10,8 +10,10 @@ import play.api.data.Form
 import play.api.libs.json.{JsNull, Json}
 import play.api.mvc._
 
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.collection.mutable.ListBuffer
+import scala.concurrent.{Await, ExecutionContext, Future, blocking}
 import scala.concurrent.duration.DurationInt
+import scala.util.{Failure, Success}
 
 
 /**
@@ -70,35 +72,89 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration)(
 
     Future{
 
-      val searchJson = Json.obj("name" -> JsNull, "pet" -> b)
+      val searchJson = Json.obj("name" -> a, "pet" -> b)
 
       (searchJson \ "name").asOpt[String]
     }
   }
 
-  def helloSearch(a: String, b: String, func:(String, String) => Future[Option[String]]): Future[Option[String]] = {
+  def helloSearch(buffer: ListBuffer[String], a: String, b: String, func:(String, String) => Future[Option[String]]): Future[Option[String]] = {
 
-    func(a, b).map {
+    func(buffer.remove(0), b).map {
 
       case Some(value) =>
-        Logger.debug("This is Some " + Some(value).get)
+        Logger.info("This is Some " + Some(value).get + " " + LocalTime.now())
+        Thread.sleep(5000)
+        helloSearch(buffer, a, b, doSearch)
         Some(value)
       case None =>
 
-        Logger.debug("This is None " + LocalTime.now())
-        Thread.sleep(2000)
-        val tt = helloSearch(a, b, doSearch)
+        Logger.info("This is None " + LocalTime.now())
+        Thread.sleep(3000)
 
-        Await.result(tt, 5.seconds)
+        //helloSearch(a, b, doSearch)
+        Await.result(helloSearch(buffer, a, b, doSearch), 5.seconds)
 
     }
+
+    //Thread.sleep(2000)
     //tt.result(5.seconds)
     //Await.result(tt, 5.seconds)
   }
 
   def test2() = Action{ implicit  request =>
 
-    helloSearch(null, "Hello", doSearch)
+   // val testList:Future[List[String]] = Future{List("A", "B", "C")}
+
+    val testList: ListBuffer[String] = ListBuffer(List("A", "B", "C"): _*)
+
+ //   helloSearch("A", "Hello", doSearch)
+    helloSearch(testList, "HelloA", "Hello", doSearch)
+/*
+    helloSearch(testList, testList.remove(0), "Hello", doSearch).onComplete{
+      case Success(value) =>{
+        value match {
+
+          case Some(value) => {
+            Logger.debug("This is return " + LocalTime.now())
+            Thread.sleep(3000)
+            helloSearch(testList, testList.remove(0), "Hello", doSearch)
+            Some(value)
+          }
+          case _ => {
+            Thread.sleep(4000)
+            None
+          }
+
+        }
+
+      }
+      case Failure(exception) => exception.printStackTrace()
+
+    }*/
+    /*
+    testList.foreach(
+      aaa =>
+      Future {
+        aaa.foreach{
+          testValue  =>
+            blocking{
+
+
+              //Thread.sleep(5000)
+            }
+            //helloSearch(testValue, "Hello", doSearch).onComplete(xx => Thread.sleep(1000))
+            //
+            /*for {
+
+              aa <- helloSearch(testValue, "Hello", doSearch)
+            }yield (aa)*/
+
+
+        }
+      }
+    )*/
+   // helloSearch(null, "Hello", doSearch)
 
     Ok("test2")
   }
